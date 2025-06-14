@@ -506,172 +506,6 @@
 //     </main>
 //   );
 // }
-// import Image from 'next/image';
-// import { notFound } from 'next/navigation';
-
-// interface ImageFormat {
-//   url: string;
-// }
-
-// interface ImageType {
-//   url: string;
-//   formats: {
-//     medium?: ImageFormat;
-//     small?: ImageFormat;
-//     thumbnail?: ImageFormat;
-//   };
-// }
-// type PageProps = {
-//   params: {
-//     documentId: string;
-//   };
-// };
-
-// interface Accommodation {
-//   id: number;
-//   documentId: string;
-//   slug: string;
-//   title: string;
-//   descrip: string | null;
-//   description: string | null;
-//   location: string | null;
-//   pricePerNight: number;
-//   numberOfBedrooms: number;
-//   numberoFBathrooms: number;
-//   maximumGuests: number;
-//   images: ImageType[];
-// }
-
-// async function getAccommodation(documentId: string): Promise<Accommodation | null> {
-//   const res = await fetch('http://localhost:1337/api/accommodations?populate=images', {
-//     cache: 'no-store',
-//   });
-
-//   if (!res.ok) return null;
-
-//   const json = await res.json();
-//   const item = json.data.find((item: any) => item.documentId === documentId);
-
-//   if (!item) return null;
-
-//   return {
-//     id: item.id,
-//     documentId: item.documentId,
-//     slug: item.slug,
-//     title: item.title,
-//     descrip: item.descrip,
-//     description: item.description,
-//     location: item.location,
-//     pricePerNight: item.pricePerNight,
-//     numberOfBedrooms: item.numberOfBedrooms,
-//     numberoFBathrooms: item.numberoFBathrooms,
-//     maximumGuests: item.maximumGuests,
-//     images: item.images || [],
-//   };
-// }
-
-// export default async function AccommodationPage({ params }: PageProps) {
-//   const accommodation = await getAccommodation(params.documentId);
-
-//   if (!accommodation) return notFound();
-
-//   const firstImage = accommodation.images[0];
-//   const heroImage =
-//     firstImage?.formats?.medium?.url || firstImage?.url
-//       ? `http://localhost:1337${firstImage?.formats?.medium?.url || firstImage?.url}`
-//       : null;
-
-//   return (
-//     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-//       {/* Hero Image */}
-//       <div className="w-full h-[400px] relative overflow-hidden rounded-2xl shadow-xl mb-10">
-//         {heroImage ? (
-//           <Image
-//             src={heroImage}
-//             alt={accommodation.title}
-//             fill
-//             priority
-//             className="object-cover"
-//           />
-//         ) : (
-//           <div className="flex items-center justify-center h-full bg-gray-100 text-gray-500 text-lg">
-//             No image available
-//           </div>
-//         )}
-//       </div>
-
-//       {/* Content */}
-//       <div className="grid grid-cols-1 lg:grid-cols-[2fr_1.2fr] gap-12">
-//         {/* Info Section */}
-//         <div className="space-y-8">
-//           <div>
-//             <h1 className="text-5xl font-bold text-gray-900">{accommodation.title}</h1>
-//             <p className="text-gray-500 mt-1 text-lg">{accommodation.location}</p>
-//           </div>
-
-//           <div className="text-base text-gray-700 leading-7">
-//             {accommodation.descrip && <p className="italic text-blue-700">{accommodation.descrip}</p>}
-//             <p className="mt-4 whitespace-pre-line">{accommodation.description || 'No detailed description available.'}</p>
-//           </div>
-
-//           <ul className="mt-4 space-y-1 text-gray-700">
-//             <li><strong>Bedrooms:</strong> {accommodation.numberOfBedrooms}</li>
-//             <li><strong>Bathrooms:</strong> {accommodation.numberoFBathrooms}</li>
-//             <li><strong>Max Guests:</strong> {accommodation.maximumGuests}</li>
-//           </ul>
-
-//           {/* Photo Gallery */}
-//           {accommodation.images.length > 1 && (
-//             <div>
-//               <h2 className="text-2xl font-semibold text-gray-800 mt-8 mb-4">Photo Gallery</h2>
-//               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-//                 {accommodation.images.slice(1).map((img, index) => {
-//                   const url = img.formats?.medium?.url || img.url;
-//                   const fullUrl = url ? `http://localhost:1337${url}` : null;
-
-//                   return fullUrl ? (
-//                     <div
-//                       key={index}
-//                       className="relative w-full h-40 rounded-xl overflow-hidden shadow-md group"
-//                     >
-//                       <Image
-//                         src={fullUrl}
-//                         alt={`Gallery image ${index + 1}`}
-//                         fill
-//                         className="object-cover group-hover:scale-105 transition-transform duration-300"
-//                         sizes="(max-width: 768px) 100vw, 33vw"
-//                       />
-//                     </div>
-//                   ) : null;
-//                 })}
-//               </div>
-//             </div>
-//           )}
-//         </div>
-
-//         {/* Booking Card */}
-//         <div className="space-y-6">
-//           {[
-//             { type: 'Classic Room', price: accommodation.pricePerNight, breakfast: false },
-//             { type: 'Classic Room + Breakfast', price: accommodation.pricePerNight + 40, breakfast: true },
-//             { type: 'Deluxe Room', price: accommodation.pricePerNight + 70, breakfast: true },
-//           ].map((option, index) => (
-//             <div key={index} className="border border-gray-200 rounded-xl p-6 shadow-sm">
-//               <div className="flex justify-between items-center mb-2">
-//                 <h3 className="text-xl font-semibold text-gray-800">{option.type}</h3>
-//                 <span className="text-sm text-gray-500">Includes {option.breakfast ? 'Breakfast' : 'Room only'}</span>
-//               </div>
-//               <p className="text-3xl font-bold text-blue-600 mb-1">${option.price.toFixed(2)}</p>
-//               <p className="text-sm text-gray-400 mb-4">Taxes Included</p>
-//               <button className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition">Book</button>
-//             </div>
-//           ))}
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }
-
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
@@ -688,13 +522,6 @@ interface ImageType {
   };
 }
 
-// ✅ FIXED: params is now a Promise in Next.js 15+
-type PageProps = {
-  params: Promise<{
-    documentId: string;
-  }>;
-};
-
 interface Accommodation {
   id: number;
   documentId: string;
@@ -710,62 +537,6 @@ interface Accommodation {
   images: ImageType[];
 }
 
-// ✅ NEW: Proper TypeScript interface for API response
-interface ApiAccommodationItem {
-  id: number;
-  documentId: string;
-  slug: string;
-  title: string;
-  descrip: string | null;
-  description: string | null;
-  location: string | null;
-  pricePerNight: number;
-  numberOfBedrooms: number;
-  numberoFBathrooms: number;
-  maximumGuests: number;
-  images: ImageType[];
-}
-
-interface ApiResponse {
-  data: ApiAccommodationItem[];
-  meta?: {
-    pagination?: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
-}
-
-// ✅ NEW: Proper TypeScript interface for API response
-interface ApiAccommodationItem {
-  id: number;
-  documentId: string;
-  slug: string;
-  title: string;
-  descrip: string | null;
-  description: string | null;
-  location: string | null;
-  pricePerNight: number;
-  numberOfBedrooms: number;
-  numberoFBathrooms: number;
-  maximumGuests: number;
-  images: ImageType[];
-}
-
-interface ApiResponse {
-  data: ApiAccommodationItem[];
-  meta?: {
-    pagination?: {
-      page: number;
-      pageSize: number;
-      pageCount: number;
-      total: number;
-    };
-  };
-}
-
 async function getAccommodation(documentId: string): Promise<Accommodation | null> {
   const res = await fetch('http://localhost:1337/api/accommodations?populate=images', {
     cache: 'no-store',
@@ -773,10 +544,8 @@ async function getAccommodation(documentId: string): Promise<Accommodation | nul
 
   if (!res.ok) return null;
 
-  const json: ApiResponse = await res.json();
-  
-  // ✅ FIXED: No more 'any' type - using proper TypeScript interface
-  const item = json.data.find((item: ApiAccommodationItem) => item.documentId === documentId);
+  const json = await res.json();
+  const item = json.data.find((item: any) => item.documentId === documentId);
 
   if (!item) return null;
 
@@ -796,10 +565,8 @@ async function getAccommodation(documentId: string): Promise<Accommodation | nul
   };
 }
 
-export default async function AccommodationPage({ params }: PageProps) {
-  // ✅ FIXED: Await the params since they're now a Promise
-  const { documentId } = await params;
-  const accommodation = await getAccommodation(documentId);
+export default async function AccommodationPage({ params }: { params: any }) {
+  const accommodation = await getAccommodation(params.documentId);
 
   if (!accommodation) return notFound();
 
@@ -836,6 +603,7 @@ export default async function AccommodationPage({ params }: PageProps) {
             <h1 className="text-5xl font-bold text-gray-900">{accommodation.title}</h1>
             <p className="text-gray-500 mt-1 text-lg">{accommodation.location}</p>
           </div>
+
           <div className="text-base text-gray-700 leading-7">
             {accommodation.descrip && <p className="italic text-blue-700">{accommodation.descrip}</p>}
             <p className="mt-4 whitespace-pre-line">{accommodation.description || 'No detailed description available.'}</p>
