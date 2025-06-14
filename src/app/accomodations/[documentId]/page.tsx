@@ -671,6 +671,7 @@
 //     </main>
 //   );
 // }
+
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
@@ -709,6 +710,62 @@ interface Accommodation {
   images: ImageType[];
 }
 
+// ✅ NEW: Proper TypeScript interface for API response
+interface ApiAccommodationItem {
+  id: number;
+  documentId: string;
+  slug: string;
+  title: string;
+  descrip: string | null;
+  description: string | null;
+  location: string | null;
+  pricePerNight: number;
+  numberOfBedrooms: number;
+  numberoFBathrooms: number;
+  maximumGuests: number;
+  images: ImageType[];
+}
+
+interface ApiResponse {
+  data: ApiAccommodationItem[];
+  meta?: {
+    pagination?: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
+// ✅ NEW: Proper TypeScript interface for API response
+interface ApiAccommodationItem {
+  id: number;
+  documentId: string;
+  slug: string;
+  title: string;
+  descrip: string | null;
+  description: string | null;
+  location: string | null;
+  pricePerNight: number;
+  numberOfBedrooms: number;
+  numberoFBathrooms: number;
+  maximumGuests: number;
+  images: ImageType[];
+}
+
+interface ApiResponse {
+  data: ApiAccommodationItem[];
+  meta?: {
+    pagination?: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+}
+
 async function getAccommodation(documentId: string): Promise<Accommodation | null> {
   const res = await fetch('http://localhost:1337/api/accommodations?populate=images', {
     cache: 'no-store',
@@ -716,8 +773,10 @@ async function getAccommodation(documentId: string): Promise<Accommodation | nul
 
   if (!res.ok) return null;
 
-  const json = await res.json();
-  const item = json.data.find((item: any) => item.documentId === documentId);
+  const json: ApiResponse = await res.json();
+  
+  // ✅ FIXED: No more 'any' type - using proper TypeScript interface
+  const item = json.data.find((item: ApiAccommodationItem) => item.documentId === documentId);
 
   if (!item) return null;
 
@@ -777,7 +836,6 @@ export default async function AccommodationPage({ params }: PageProps) {
             <h1 className="text-5xl font-bold text-gray-900">{accommodation.title}</h1>
             <p className="text-gray-500 mt-1 text-lg">{accommodation.location}</p>
           </div>
-
           <div className="text-base text-gray-700 leading-7">
             {accommodation.descrip && <p className="italic text-blue-700">{accommodation.descrip}</p>}
             <p className="mt-4 whitespace-pre-line">{accommodation.description || 'No detailed description available.'}</p>
