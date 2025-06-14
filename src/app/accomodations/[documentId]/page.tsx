@@ -521,6 +521,11 @@ interface ImageType {
     thumbnail?: ImageFormat;
   };
 }
+type PageProps = {
+  params: {
+    documentId: string;
+  };
+};
 
 interface Accommodation {
   id: number;
@@ -565,7 +570,7 @@ async function getAccommodation(documentId: string): Promise<Accommodation | nul
   };
 }
 
-export default async function AccommodationPage({ params }: { params: { documentId: string } }) {
+export default async function AccommodationPage({ params }: PageProps) {
   const accommodation = await getAccommodation(params.documentId);
 
   if (!accommodation) return notFound();
