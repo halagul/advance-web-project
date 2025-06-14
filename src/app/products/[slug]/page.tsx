@@ -4,9 +4,7 @@ import Image from 'next/image';
 import { products , Product } from '../../../../lib/products';
 
 interface Props {
-  params: {
-    slug: string;
-  };
+  params: any;
 }
 
 export default function ProductDetailPage({ params }: Props) {
