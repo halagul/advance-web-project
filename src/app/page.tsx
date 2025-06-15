@@ -160,7 +160,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const homeRes = await fetch('https://advance-web-project-2l51.vercel.app/api/home-page?populate=heroImage');
+        const homeRes = await fetch('http://localhost:1337/api/home-page?populate=heroImage');
         const homeJson = await homeRes.json();
         const homeData = homeJson?.data;
 
